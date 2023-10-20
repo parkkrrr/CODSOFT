@@ -7,10 +7,7 @@ private:
     int score;
     int level;
     // Function to generate a random number
-    int randomNumber(int range)
-    {
-        return (rand() % range + 1);
-    }
+    int randomNumber(int range) { return (rand() % range + 1); }
 
 public:
     GuessingGame() : score(0), level(1)
@@ -40,6 +37,7 @@ public:
                     cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     cout << "Invalid Input. Please enter a number." << endl;
+                    count++;
                 }
                 else if (guess == guessingNumber)
                 {
@@ -50,7 +48,7 @@ public:
                 }
                 cout << (guess > guessingNumber ? "Guess Lower Number" : "Guess Higher Number.") << endl;
             }
-            if (count==0)
+            if (count == 0)
             {
                 cout << "Wrong Guess" << endl;
                 score -= level;
