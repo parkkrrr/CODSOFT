@@ -3,6 +3,9 @@
         "cstdlib": "cpp",
         "ostream": "cpp",
         "iostream": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "*.tcc": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp"
     }
 }
