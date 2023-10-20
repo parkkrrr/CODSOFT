@@ -120,7 +120,27 @@ public:
         }
     }
 
-    
+    void remove(){
+        list();
+        int id;
+        cout<<"Enter the ID -> ";
+        cin>>id;
+        for(auto i=task.begin();i<task.end();i++)
+            if(i->id==id)
+                task.erase(i);
+    }
+
+   void completedTask() {
+    for(Task &task :task)
+        if(task.completed==true)
+            cout<<&task<<"\n";
+   }
+
+   void list(){
+    for(Task &task:task)
+        cout<<&task<<"\n";
+   }
+
 };
 int main(int argc, char *argv[])
 {
