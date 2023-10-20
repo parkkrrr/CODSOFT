@@ -1,5 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
+
+int generateUID()
+{
+    static long long counter = 0;
+    return counter++;
+}
+
 enum class Priority
 {
     low,
@@ -14,9 +21,9 @@ public:
     string title;
     bool completed;
     Priority priority;
-    Task(int id, string title, Priority priority, bool completed = false)
+    Task(string title, Priority priority, bool completed = false)
     {
-        this->id = id;
+        this->id = generateUID();
         this->title = title;
         this->priority = priority;
     }
@@ -38,13 +45,24 @@ public:
 
     void add()
     {
-        cin >> id;
+        string title;
+        int priority;
         cout << "\nEnter task title/description: ";
-        cin >> title;
+        getline(cin,title);
         cout << "\nEnter priority: 0:Low, 1:Medium, 2:High -> ";
         cin >> priority;
-        Task *temp = new Task(id, title, priority);
-        task = temp;
+        Priority prior;
+        if(priority==0)
+            prior=Priority::low;
+        else if(priority==1)
+            prior=Priority::medium;
+        else if(priority==2)
+            prior=Priority::high;
+        else    
+            return;
+            
+        Task t(title, prior);
+        
     }
 
     void displayMenu()
