@@ -39,7 +39,7 @@ public:
     void remove();
     void update();
     void displayMenu();
-    void markComplete(Task task);
+    void markComplete();
     void completedTask();
     void list();
 
@@ -48,21 +48,21 @@ public:
         string title;
         int priority;
         cout << "\nEnter task title/description: ";
-        getline(cin,title);
+        getline(cin, title);
         cout << "\nEnter priority: 0:Low, 1:Medium, 2:High -> ";
         cin >> priority;
         Priority prior;
-        if(priority==0)
-            prior=Priority::low;
-        else if(priority==1)
-            prior=Priority::medium;
-        else if(priority==2)
-            prior=Priority::high;
-        else    
+        if (priority == 0)
+            prior = Priority::low;
+        else if (priority == 1)
+            prior = Priority::medium;
+        else if (priority == 2)
+            prior = Priority::high;
+        else
             return;
-            
+
         Task t(title, prior);
-        
+        task.emplace_back(t);
     }
 
     void displayMenu()
@@ -103,11 +103,24 @@ public:
         }
     }
 
-    void update()
+    void markComplete()
     {
         list();
-        cout << "Select ID"
+        int id;
+        cout<<"Enter the ID -> ";
+        cin>>id;
+        for (Task &task : task)
+        {
+            if (task.id == id)
+            {
+                task.completed = true;
+                cout << "\nTask " << task.title << " has been marked as complete.\n";
+                return;
+            }
+        }
     }
+
+    
 };
 int main(int argc, char *argv[])
 {
