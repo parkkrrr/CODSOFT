@@ -103,12 +103,40 @@ public:
         }
     }
 
+    void update()
+    {
+        list();
+        int id;
+        cout << "Enter the ID -> ";
+        cin >> id;
+        for (auto i = task.begin(); i < task.end(); i++)
+        {
+            if (i->id == id)
+            {
+                string title;
+                cout << "Title : (Press Enter for Default value) -> ";
+                getline(cin, title);
+                if (cin.fail())
+                    cin.clear();
+                else
+                    i->title = title;
+                int priority;
+                cout << "Priority : (0:Low, 1:Medium, 2:High) -> ";
+                cin >> priority;
+                if (priority >= 0 || priority <= 0)
+                    i->priority = static_cast<Priority>(priority);
+                else
+                    return;
+            }
+        }
+    }
+
     void markComplete()
     {
         list();
         int id;
-        cout<<"Enter the ID -> ";
-        cin>>id;
+        cout << "Enter the ID -> ";
+        cin >> id;
         for (Task &task : task)
         {
             if (task.id == id)
@@ -120,35 +148,63 @@ public:
         }
     }
 
-    void remove(){
+    void remove()
+    {
         list();
         int id;
-        cout<<"Enter the ID -> ";
-        cin>>id;
-        for(auto i=task.begin();i<task.end();i++)
-            if(i->id==id)
+        cout << "Enter the ID -> ";
+        cin >> id;
+        for (auto i = task.begin(); i < task.end(); i++)
+            if (i->id == id)
                 task.erase(i);
     }
 
-   void completedTask() {
-    for(Task &task :task)
-        if(task.completed==true)
-            cout<<&task<<"\n";
-   }
+    void completedTask()
+    {
+        for (Task &task : task)
+            if (task.completed == true)
+                cout << &task << "\n";
+    }
 
-   void list(){
-    for(Task &task:task)
-        cout<<&task<<"\n";
-   }
-
+    void list()
+    {
+        for (Task &task : task)
+            cout << &task << "\n";
+    }
 };
+
 int main(int argc, char *argv[])
 {
-
     ToDoList todo;
     if (argc < 2)
-    {
         todo.displayMenu();
+
+    if (argc > 1)
+    {
+        string args = argv[1];
+        switch (args)
+        {
+        case "add":
+            todo.add();
+            break;
+
+        case "help":
+            cout << "Usage:\n\t$ " << argv[0] << " add\n\t$ " << argv[0] << " remove\n\t$ " << argv[0] << " update\n\t$ " << argv[0] << " display\n";
+            break;
+
+        case "remove":
+            todo.remove();
+            break;
+        case "update":
+            todo.update();
+            break;
+
+        case "display":
+            todo.list();
+            break;
+        default: 
+            todo.displayMenu();
+        }
     }
 
     return 0;
