@@ -61,13 +61,12 @@ int main(int argc, char *argv[])
             result = calc.div();
             break;
         default:
-            cout << "\n(-) Invalid operator-> " << op << "\n";
+            cout << "\n(-) Invalid operator\n";
             return 1;
         }
 
         cout << "\n(+) Result -> " << result << "\n";
+        system("pause");
     }
-
-    system("pause");
     return 0;
 }
