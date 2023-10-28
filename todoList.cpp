@@ -17,7 +17,7 @@ enum class Priority
 class Task
 {
 public:
-    int id; // randomly generated
+    int id;
     string title;
     bool completed;
     Priority priority;
@@ -27,6 +27,10 @@ public:
         this->title = title;
         this->priority = priority;
     }
+    // Task(string title, int priority, bool completed = false) : title(title), priority(priority), completed(completed)
+    // {
+    //     id = generateUID();
+    // }
     Task() {}
 };
 
@@ -38,15 +42,15 @@ class ToDoList
 public:
     ToDoList(string &filename) : filename(filename) {}
 
-    void add();
-    void remove();
-    void update();
-    void displayMenu();
-    void markComplete();
-    void completedTask();
-    void list();
-    void saveFile();
-    void loadFile();
+    // void add();
+    // void remove();
+    // void update();
+    // void displayMenu();
+    // void markComplete();
+    // void completedTask();
+    // void list();
+    // void saveFile();
+    // void loadFile();
 
     void saveFile()
     {
@@ -54,7 +58,7 @@ public:
 
         if (!file.is_open())
         {
-            cerr << "Error saving tasks\n";
+            cerr << "### Error saving tasks\n";
             return;
         }
 
@@ -67,11 +71,11 @@ public:
     void loadFile()
     {
         ifstream file(filename);
-
         if (!file.is_open())
         {
-            cerr << "Error loading tasks\n";
-            return;
+            cerr << "### File not found. Creating a new file." << endl;
+            ofstream newFile(filename);
+            newFile.close();
         }
 
         // task.clear();
@@ -95,10 +99,10 @@ public:
     {
         string title;
         int priority;
-        cout << "\nEnter task title/description: ";
+        cout << "\n(+) Enter task title/description -> ";
         cin.ignore();
         getline(cin, title);
-        cout << "\nEnter priority: 0:Low, 1:Medium, 2:High -> ";
+        cout << "\n(+) Enter priority: 0:Low, 1:Medium, 2:High -> ";
         cin >> priority;
         Priority prior;
         if (priority == 0)
@@ -118,8 +122,10 @@ public:
     {
         while (true)
         {
+            system("pause");
+            system("cls");
             cout << "-------TO-DO-LIST-------\n";
-            cout << "1.Add\n2.Remove\n3.Update\n4.Mark Complete\n5.Completed Task\n6. Display all Task\n7.Exit\n";
+            cout << "1.Add\n2.Remove\n3.Update\n4.Mark Complete\n5.Completed Task\n6. Display all Task\n7.Exit\n->";
 
             int op;
             cin >> op;
@@ -147,7 +153,7 @@ public:
                 return;
 
             default:
-                cout << "You have entered Wrong option.\n";
+                cout << "### You have entered Wrong option.\n";
             }
         }
     }
@@ -156,14 +162,14 @@ public:
     {
         list();
         int id;
-        cout << "Enter the ID -> ";
+        cout << "(+) Enter the ID -> ";
         cin >> id;
         for (auto i = task.begin(); i < task.end(); i++)
         {
             if (i->id == id)
             {
                 string title;
-                cout << "Title : (Press Enter for Default value) -> ";
+                cout << "(+) Title : (Press Enter for Default value) -> ";
                 cin.ignore();
                 getline(cin, title);
 
@@ -172,7 +178,7 @@ public:
                 else
                     i->title = title;
                 int priority;
-                cout << "Priority : (0:Low, 1:Medium, 2:High) -> ";
+                cout << "(+) Priority : (0:Low, 1:Medium, 2:High) -> ";
                 cin >> priority;
                 if (priority >= 0 || priority <= 0)
                     i->priority = static_cast<Priority>(priority);
@@ -186,14 +192,14 @@ public:
     {
         list();
         int id;
-        cout << "Enter the ID -> ";
+        cout << "\n(+) Enter the ID -> ";
         cin >> id;
         for (auto &task : task)
         {
             if (task.id == id)
             {
                 task.completed = true;
-                cout << "\nTask " << task.title << " has been marked as complete.\n";
+                cout << "\n(+) Task " << task.title << " has been marked as complete.\n";
                 return;
             }
         }
@@ -203,7 +209,7 @@ public:
     {
         list();
         int id;
-        cout << "Enter the ID -> ";
+        cout << "(-) Enter the ID -> ";
         cin >> id;
         for (auto i = task.begin(); i != task.end(); i++)
             if (i->id == id)
@@ -216,14 +222,14 @@ public:
     void completedTask()
     {
         for (auto &task : task)
-            if (task.completed)
-                cout << "\n->" << task.id << "\n->" << task.title << "\n->" << task.priority << "\n";
+            if (task.completed == true)
+                cout << "\n->" << task.id << "\n->" << task.title << "\n";
     }
 
     void list()
     {
         for (auto &task : task)
-            cout << "\n->" << task.id << "\n->" << task.title << "\n->" << task.priority << "\n";
+            cout << "\n->" << task.id << "\n->" << task.title << "\n";
     }
 
     bool isEmpty()
@@ -237,10 +243,10 @@ public:
 
 int main(int argc, char *argv[])
 {
-    // system("clear");
-    string filename = "tasks.txt"; // Specify the file to save tasks
-    ToDoList todoList(filename);
-    todoList.loadFile();
+    // system("cls");
+    string filename = "todo.txt";
+    ToDoList todo(filename);
+    todo.loadFile();
 
     if (argc < 2)
         todo.displayMenu();
@@ -249,22 +255,31 @@ int main(int argc, char *argv[])
     {
         string arg = argv[1];
 
-        if (arg == "add"){
+        if (arg == "add")
+        {
             todo.add();
-            todoList.saveFile();
+            todo.saveFile();
+            system("cls");
         }
 
         else if (arg == "help")
+        {
             cout << "Usage:\n\t$ " << argv[0] << " add\n\t$ " << argv[0] << " remove\n\t$ " << argv[0] << " update\n\t$ " << argv[0] << " display\n";
-
-        else if (arg == "remove"){
-            todo.remove();
-            todo.saveFile();
+            system("cls");
         }
 
-        else if (arg == "update"){
+        else if (arg == "remove")
+        {
+            todo.remove();
+            todo.saveFile();
+            system("cls");
+        }
+
+        else if (arg == "update")
+        {
             todo.update();
             todo.saveFile();
+            system("cls");
         }
 
         else if (arg == "display")
