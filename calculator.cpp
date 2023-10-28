@@ -15,7 +15,7 @@ public:
 
     double mul() { return op1 * op2; }
 
-    double division() { return (op2 != 0) ? op1 / op2 : (exit(1), 0.0); }
+    double div() { return (op2 != 0) ? op1 / op2 : (exit(1), 0.0); }
 };
 
 int main(int argc, char *argv[])
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
             result = calc.mul();
             break;
         case '/':
-            result = calc.division();
+            result = calc.div();
             break;
         default:
             cout << "\n(-) Invalid operator-> " << op << "\n";
