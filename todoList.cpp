@@ -33,8 +33,11 @@ public:
 class ToDoList
 {
     vector<Task> task;
+    string filename;
 
 public:
+    ToDoList(string &filename) : filename(filename) {}
+
     void add();
     void remove();
     void update();
@@ -42,12 +45,58 @@ public:
     void markComplete();
     void completedTask();
     void list();
+    void saveFile();
+    void loadFile();
+
+    void saveFile()
+    {
+        ofstream file(filename);
+
+        if (!file.is_open())
+        {
+            cerr << "Error saving tasks\n";
+            return;
+        }
+
+        for (auto &task : task)
+            file << task.id << "," << task.title << "," << static_cast<int>(task.priority) << "," << (task.completed ? "1" : "0") << "\n";
+
+        file.close();
+    }
+
+    void loadFile()
+    {
+        ifstream file(filename);
+
+        if (!file.is_open())
+        {
+            cerr << "Error loading tasks\n";
+            return;
+        }
+
+        // task.clear();
+
+        string str;
+        while (getline(file, str))
+        {
+            stringstream ss(str);
+            string id, title, priority, completed;
+            if (getline(ss, id, ',') && getline(ss, title, ',') && getline(ss, priority, ',') && getline(ss, completed, ','))
+            {
+                Task task(title, static_cast<Priority>(stoi(priority)), (completed == "1"));
+                task.id = stoi(id);
+                this->task.emplace_back(task);
+            }
+        }
+        file.close();
+    }
 
     void add()
     {
         string title;
         int priority;
         cout << "\nEnter task title/description: ";
+        cin.ignore();
         getline(cin, title);
         cout << "\nEnter priority: 0:Low, 1:Medium, 2:High -> ";
         cin >> priority;
@@ -115,7 +164,9 @@ public:
             {
                 string title;
                 cout << "Title : (Press Enter for Default value) -> ";
+                cin.ignore();
                 getline(cin, title);
+
                 if (cin.fail())
                     cin.clear();
                 else
@@ -137,7 +188,7 @@ public:
         int id;
         cout << "Enter the ID -> ";
         cin >> id;
-        for (Task &task : task)
+        for (auto &task : task)
         {
             if (task.id == id)
             {
@@ -154,58 +205,77 @@ public:
         int id;
         cout << "Enter the ID -> ";
         cin >> id;
-        for (auto i = task.begin(); i < task.end(); i++)
+        for (auto i = task.begin(); i != task.end(); i++)
             if (i->id == id)
+            {
                 task.erase(i);
+                return;
+            }
     }
 
     void completedTask()
     {
-        for (Task &task : task)
-            if (task.completed == true)
-                cout << &task << "\n";
+        for (auto &task : task)
+            if (task.completed)
+                cout << "\n->" << task.id << "\n->" << task.title << "\n->" << task.priority << "\n";
     }
 
     void list()
     {
-        for (Task &task : task)
-            cout << &task << "\n";
+        for (auto &task : task)
+            cout << "\n->" << task.id << "\n->" << task.title << "\n->" << task.priority << "\n";
+    }
+
+    bool isEmpty()
+    {
+        // if (task.empty())
+        //     return true;
+        // return false;
+        return task.empty();
     }
 };
 
 int main(int argc, char *argv[])
 {
-    ToDoList todo;
+    // system("clear");
+    string filename = "tasks.txt"; // Specify the file to save tasks
+    ToDoList todoList(filename);
+    todoList.loadFile();
+
     if (argc < 2)
         todo.displayMenu();
 
     if (argc > 1)
     {
-        string args = argv[1];
-        switch (args)
-        {
-        case "add":
+        string arg = argv[1];
+
+        if (arg == "add"){
             todo.add();
-            break;
-
-        case "help":
-            cout << "Usage:\n\t$ " << argv[0] << " add\n\t$ " << argv[0] << " remove\n\t$ " << argv[0] << " update\n\t$ " << argv[0] << " display\n";
-            break;
-
-        case "remove":
-            todo.remove();
-            break;
-        case "update":
-            todo.update();
-            break;
-
-        case "display":
-            todo.list();
-            break;
-        default: 
-            todo.displayMenu();
+            todoList.saveFile();
         }
-    }
 
+        else if (arg == "help")
+            cout << "Usage:\n\t$ " << argv[0] << " add\n\t$ " << argv[0] << " remove\n\t$ " << argv[0] << " update\n\t$ " << argv[0] << " display\n";
+
+        else if (arg == "remove"){
+            todo.remove();
+            todo.saveFile();
+        }
+
+        else if (arg == "update"){
+            todo.update();
+            todo.saveFile();
+        }
+
+        else if (arg == "display")
+            if (todo.isEmpty())
+                cout << "List is Empty\n";
+            else
+                todo.list();
+
+        else
+            todo.displayMenu();
+    }
+    system("pause");
     return 0;
 }
