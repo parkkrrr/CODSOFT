@@ -20,11 +20,11 @@ public:
 
 int main(int argc, char *argv[])
 {
+    Calculator calc;
+    char op;
+
     while (1)
     {
-        Calculator calc;
-        char op;
-
         if (argc == 4)
         {
             calc.op1 = atof(argv[1]);
@@ -66,7 +66,12 @@ int main(int argc, char *argv[])
         }
 
         cout << "\n(+) Result -> " << result << "\n";
+
+        if (argc == 4)
+            return 0;
+
         system("pause");
     }
+
     return 0;
 }
