@@ -65,6 +65,7 @@ public:
             if (playYN == 'N' || playYN == 'n')
             {
                 cout << "Your final score is " << score << endl;
+                system("pause");
                 break;
             }
         }
